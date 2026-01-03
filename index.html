@@ -5,7 +5,7 @@
 <title>Convite Interativo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- PRÉVIA DO LINK (WHATSAPP / REDES) -->
+<!-- PRÉVIA DO LINK -->
 <meta property="og:title" content="Você está convidado 🎉">
 <meta property="og:description" content="Toque para abrir o convite interativo">
 <meta property="og:image" content="preview.jpg">
@@ -91,17 +91,19 @@ video {
     animation: flutuar 2.5s ease-in-out infinite;
 }
 
-/* BOTÕES (LIVRES) */
+/* BOTÕES */
 .buttons {
     position: absolute;
-    bottom: 6%;
-    width: 100%;
+    inset: 0;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    transform: translateY(200px);
 }
 
 .buttons img {
-    width: 140px;
+    width: 80px;
     height: auto;
     cursor: pointer;
 }
@@ -142,13 +144,13 @@ video {
         </div>
 
         <div class="buttons">
-            <img src="btn-maps.png" alt="Localização" onclick="openMaps()">
-            <img src="btn-whats.png" alt="Confirmar presença" onclick="openWhats()">
+            <img src="btn-maps.png" onclick="openMaps()">
+            <img src="btn-whats.png" onclick="openWhats()">
         </div>
 
     </div>
 
-    <!-- MÚSICA (TOCA SÓ NO CONVITE) -->
+    <!-- MÚSICA -->
     <audio id="music" preload="auto">
         <source src="musica.mp3" type="audio/mpeg">
     </audio>
@@ -156,12 +158,29 @@ video {
 </div>
 
 <script>
+const videoScreen = document.getElementById("videoScreen");
 const video   = document.getElementById("video");
 const overlay = document.getElementById("overlay");
 const invite  = document.getElementById("invite");
 const music   = document.getElementById("music");
 
-/* CLIQUE DO USUÁRIO (SÓ INICIA O VÍDEO) */
+/* VERIFICA SE JÁ VIU O VÍDEO */
+const jaViuVideo = localStorage.getItem("conviteVideoVisto");
+
+/* SE JÁ VIU → PULA DIRETO PARA O CONVITE */
+if (jaViuVideo === "true") {
+    videoScreen.style.display = "none";
+    invite.style.opacity = "1";
+    invite.style.pointerEvents = "auto";
+
+    /* inicia música */
+    setTimeout(() => {
+        music.volume = 0.5;
+        music.play();
+    }, 300);
+}
+
+/* PRIMEIRA VEZ */
 overlay.addEventListener("click", () => {
     overlay.style.display = "none";
 
@@ -170,14 +189,17 @@ overlay.addEventListener("click", () => {
     video.play();
 });
 
-/* QUANDO O VÍDEO TERMINA */
+/* QUANDO O VÍDEO TERMINAR */
 video.addEventListener("ended", () => {
 
-    /* MOSTRA O CONVITE */
+    /* SALVA QUE JÁ ASSISTIU */
+    localStorage.setItem("conviteVideoVisto", "true");
+
+    /* MOSTRA CONVITE */
     invite.style.opacity = "1";
     invite.style.pointerEvents = "auto";
 
-    /* INICIA A MÚSICA */
+    /* INICIA MÚSICA */
     music.volume = 0.5;
     music.play();
 });
@@ -185,12 +207,12 @@ video.addEventListener("ended", () => {
 /* LINKS */
 function openMaps() {
     window.location.href =
-    "https://maps.google.com/?q=SEU_ENDERECO_AQUI";
+    "https://maps.app.goo.gl/tvwoqt8HZ8YwBLAT6";
 }
 
 function openWhats() {
     window.location.href =
-    "https://wa.me/55DDDNUMERO?text=Confirmo%20minha%20presença";
+    "https://wa.me/5588981076772?text=Confirmo%20minha%20presença";
 }
 </script>
 
