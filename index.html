@@ -5,7 +5,7 @@
 <title>Convite Interativo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- PRÉVIA DO LINK -->
+<!-- PRÉVIA -->
 <meta property="og:title" content="Você está convidado 🎉">
 <meta property="og:description" content="Toque para abrir o convite interativo">
 <meta property="og:image" content="preview.jpg">
@@ -19,64 +19,55 @@
 }
 
 body {
-    background: #000;
+    background: black;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* APP 9:16 */
 .app {
     width: 100%;
     max-width: 420px;
     aspect-ratio: 9 / 16;
     position: relative;
     overflow: hidden;
-    background: black;
 }
 
-/* TELAS */
-.screen {
-    position: absolute;
-    inset: 0;
-}
-
-/* VÍDEO (CORRIGIDO PARA CELULAR) */
+/* VÍDEO VISÍVEL */
 video {
-    position: absolute;
-    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     background: black;
-    z-index: 1;
 }
 
-/* OVERLAY PLAY */
-#overlay {
+/* BOTÃO DE PLAY (PNG) */
+.play-btn {
     position: absolute;
     inset: 0;
-    z-index: 2;
-    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
 }
 
-#overlay img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.play-btn img {
+    width: 80%;
+    cursor: pointer;
 }
 
 /* CONVITE */
 #invite {
+    position: absolute;
+    inset: 0;
     background: url("fundo.png") center/cover no-repeat;
     opacity: 0;
     pointer-events: none;
     transition: opacity 1s ease;
-    z-index: 3;
 }
 
-/* IMAGENS 9:16 */
+/* INFO + LOGO */
 .info,
 .logo {
     position: absolute;
@@ -90,12 +81,11 @@ video {
     object-fit: contain;
 }
 
-/* LOGO ANIMADA */
 .logo {
     animation: flutuar 2.5s ease-in-out infinite;
 }
 
-/* BOTÕES (MANTIDOS COMO VOCÊ AJUSTOU) */
+/* BOTÕES */
 .buttons {
     position: absolute;
     inset: 0;
@@ -104,19 +94,16 @@ video {
     align-items: center;
     gap: 30px;
     transform: translateY(200px);
-    z-index: 5;
 }
 
 .buttons img {
     width: 80px;
-    height: auto;
     cursor: pointer;
 }
 
-/* ANIMAÇÃO LOGO */
 @keyframes flutuar {
-    0%   { transform: translateY(0); }
-    50%  { transform: translateY(-12px); }
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
     100% { transform: translateY(0); }
 }
 </style>
@@ -126,96 +113,76 @@ video {
 
 <div class="app">
 
-    <!-- TELA DO VÍDEO -->
-    <div class="screen" id="videoScreen">
-        <video
-            id="video"
-            playsinline
-            webkit-playsinline
-            preload="auto"
-            muted
-        >
-            <source src="video.mp4" type="video/mp4">
-        </video>
+    <!-- VÍDEO SEM OVERLAY -->
+    <video
+        id="video"
+        playsinline
+        webkit-playsinline
+        preload="auto"
+        muted
+    >
+        <source src="video.mp4" type="video/mp4">
+    </video>
 
-        <div id="overlay">
-            <img src="overlay.png" alt="Clique para iniciar">
-        </div>
+    <!-- BOTÃO PLAY -->
+    <div class="play-btn" id="playBtn">
+        <img src="overlay.png" alt="Clique para iniciar">
     </div>
 
-    <!-- TELA DO CONVITE -->
-    <div class="screen" id="invite">
-
+    <!-- CONVITE -->
+    <div id="invite">
         <div class="info">
-            <img src="info.png" alt="Informações do convite">
+            <img src="info.png">
         </div>
 
         <div class="logo">
-            <img src="logo.png" alt="Logo">
+            <img src="logo.png">
         </div>
 
         <div class="buttons">
             <img src="btn-maps.png" onclick="openMaps()">
             <img src="btn-whats.png" onclick="openWhats()">
         </div>
-
     </div>
 
-    <!-- MÚSICA -->
-    <audio id="music" preload="auto">
+    <audio id="music">
         <source src="musica.mp3" type="audio/mpeg">
     </audio>
 
 </div>
 
 <script>
-const videoScreen = document.getElementById("videoScreen");
-const video   = document.getElementById("video");
-const overlay = document.getElementById("overlay");
-const invite  = document.getElementById("invite");
-const music   = document.getElementById("music");
+const video = document.getElementById("video");
+const playBtn = document.getElementById("playBtn");
+const invite = document.getElementById("invite");
+const music = document.getElementById("music");
 
-/* VERIFICA SE JÁ VIU O VÍDEO */
-const jaViuVideo = localStorage.getItem("conviteVideoVisto");
+const jaViu = localStorage.getItem("conviteVideoVisto");
 
-/* SE JÁ VIU → PULA DIRETO PARA O CONVITE */
-if (jaViuVideo === "true") {
-    videoScreen.style.display = "none";
-    invite.style.opacity = "1";
+if (jaViu === "true") {
+    playBtn.style.display = "none";
+    invite.style.opacity = 1;
     invite.style.pointerEvents = "auto";
-
-    setTimeout(() => {
-        music.volume = 0.5;
-        music.play().catch(()=>{});
-    }, 300);
+    music.volume = 0.5;
+    music.play().catch(()=>{});
 }
 
-/* PRIMEIRA VEZ */
-overlay.addEventListener("click", () => {
-    overlay.style.display = "none";
-
+playBtn.addEventListener("click", () => {
+    playBtn.style.display = "none";
     video.muted = false;
-    video.currentTime = 0;
-
-    video.play().catch(()=>{});
+    video.play();
 });
 
-/* QUANDO O VÍDEO TERMINAR */
 video.addEventListener("ended", () => {
-
     localStorage.setItem("conviteVideoVisto", "true");
-
-    invite.style.opacity = "1";
+    invite.style.opacity = 1;
     invite.style.pointerEvents = "auto";
-
     music.volume = 0.5;
     music.play().catch(()=>{});
 });
 
-/* LINKS */
 function openMaps() {
-    window.location.href =
-    "https://maps.app.goo.gl/tvwoqt8HZ8YwBLAT6";
+    window.location.href = "https://maps.app.goo.gl/tvwoqt8HZ8YwBLAT6";
 }
 
 function openWhats() {
