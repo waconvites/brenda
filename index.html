@@ -42,19 +42,22 @@ body {
     inset: 0;
 }
 
-/* VÍDEO */
+/* VÍDEO (CORRIGIDO PARA CELULAR) */
 video {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     background: black;
+    z-index: 1;
 }
 
 /* OVERLAY PLAY */
 #overlay {
     position: absolute;
     inset: 0;
-    z-index: 999;
+    z-index: 2;
     cursor: pointer;
 }
 
@@ -70,6 +73,7 @@ video {
     opacity: 0;
     pointer-events: none;
     transition: opacity 1s ease;
+    z-index: 3;
 }
 
 /* IMAGENS 9:16 */
@@ -91,7 +95,7 @@ video {
     animation: flutuar 2.5s ease-in-out infinite;
 }
 
-/* BOTÕES */
+/* BOTÕES (MANTIDOS COMO VOCÊ AJUSTOU) */
 .buttons {
     position: absolute;
     inset: 0;
@@ -100,6 +104,7 @@ video {
     align-items: center;
     gap: 30px;
     transform: translateY(200px);
+    z-index: 5;
 }
 
 .buttons img {
@@ -123,7 +128,13 @@ video {
 
     <!-- TELA DO VÍDEO -->
     <div class="screen" id="videoScreen">
-        <video id="video" muted playsinline preload="auto">
+        <video
+            id="video"
+            playsinline
+            webkit-playsinline
+            preload="auto"
+            muted
+        >
             <source src="video.mp4" type="video/mp4">
         </video>
 
@@ -173,10 +184,9 @@ if (jaViuVideo === "true") {
     invite.style.opacity = "1";
     invite.style.pointerEvents = "auto";
 
-    /* inicia música */
     setTimeout(() => {
         music.volume = 0.5;
-        music.play();
+        music.play().catch(()=>{});
     }, 300);
 }
 
@@ -185,23 +195,21 @@ overlay.addEventListener("click", () => {
     overlay.style.display = "none";
 
     video.muted = false;
-    video.volume = 1;
-    video.play();
+    video.currentTime = 0;
+
+    video.play().catch(()=>{});
 });
 
 /* QUANDO O VÍDEO TERMINAR */
 video.addEventListener("ended", () => {
 
-    /* SALVA QUE JÁ ASSISTIU */
     localStorage.setItem("conviteVideoVisto", "true");
 
-    /* MOSTRA CONVITE */
     invite.style.opacity = "1";
     invite.style.pointerEvents = "auto";
 
-    /* INICIA MÚSICA */
     music.volume = 0.5;
-    music.play();
+    music.play().catch(()=>{});
 });
 
 /* LINKS */
