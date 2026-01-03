@@ -13,14 +13,14 @@
 }
 
 body {
-    background: #000;
+    background: black;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* APP 9:16 */
+/* ÁREA 9:16 */
 .app {
     width: 100%;
     max-width: 420px;
@@ -35,23 +35,22 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
 }
 
-/* ===== VIDEO ===== */
+/* VÍDEO */
 video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    background: black;
 }
 
-/* PNG INICIAL */
+/* OVERLAY INICIAL */
 #overlay {
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: 10;
     cursor: pointer;
 }
 
@@ -61,9 +60,9 @@ video {
     object-fit: cover;
 }
 
-/* ===== CONVITE ===== */
-#inviteScreen {
-    background: url("convite-fundo.png") center/cover no-repeat;
+/* CONVITE */
+#invite {
+    background: url("fundo.png") center/cover no-repeat;
     opacity: 0;
     pointer-events: none;
     transition: opacity 1s ease;
@@ -107,7 +106,7 @@ video {
     cursor: pointer;
 }
 
-/* ANIMAÇÕES */
+/* ANIMAÇÃO LOGO */
 @keyframes float {
     0% { transform: translate(-50%, 0); }
     50% { transform: translate(-50%, -15px); }
@@ -120,19 +119,19 @@ video {
 
 <div class="app">
 
-    <!-- TELA 1 -->
-    <div id="videoScreen" class="screen">
-        <video id="video" muted playsinline>
+    <!-- TELA DO VÍDEO -->
+    <div class="screen">
+        <video id="video" muted playsinline preload="auto">
             <source src="video.mp4" type="video/mp4">
         </video>
 
         <div id="overlay">
-            <img src="overlay-inicial.png">
+            <img src="overlay.png" alt="Clique aqui">
         </div>
     </div>
 
-    <!-- TELA 2 -->
-    <div id="inviteScreen" class="screen">
+    <!-- TELA DO CONVITE -->
+    <div id="invite" class="screen">
 
         <div class="info">
             <img src="info.png">
@@ -143,8 +142,8 @@ video {
         </div>
 
         <div class="buttons">
-            <img src="btn-localizacao.png" onclick="openMaps()">
-            <img src="btn-whatsapp.png" onclick="openWhats()">
+            <img src="btn-maps.png" onclick="openMaps()">
+            <img src="btn-whats.png" onclick="openWhats()">
         </div>
 
     </div>
@@ -154,7 +153,7 @@ video {
 <script>
 const video = document.getElementById("video");
 const overlay = document.getElementById("overlay");
-const invite = document.getElementById("inviteScreen");
+const invite = document.getElementById("invite");
 
 overlay.addEventListener("click", () => {
     overlay.style.display = "none";
@@ -169,12 +168,12 @@ video.addEventListener("ended", () => {
 /* LINKS */
 function openMaps() {
     window.location.href =
-    "https://maps.google.com/?q=SEU+ENDERECO+AQUI";
+    "https://maps.google.com/?q=SEU+ENDERECO_AQUI";
 }
 
 function openWhats() {
     window.location.href =
-    "https://wa.me/55DDDNUMERO?text=Confirmo%20minha%20presença!";
+    "https://wa.me/55DDDNUMERO?text=Confirmo%20minha%20presença";
 }
 </script>
 
